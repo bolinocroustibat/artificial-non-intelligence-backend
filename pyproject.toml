@@ -1,0 +1,30 @@
+[project]
+name = "artificial-non-intelligence-data"
+version = "0.5.5"
+description = ""
+authors = [
+    { name = "Adrien Carpentier", email = "moi@adriencarpentier.com" },
+    { name = "Philip Lin", email = "philip.lin@gmail.com" },
+    { name = "Dilnoza Mirdjalilova", email = "dmirdjalilova@gmail.com" },
+]
+dependencies = [
+    "pandas<2.3.0,>=2.2.0",
+    "psycopg>=3.1.10",
+    "psycopg-binary>=3.1.10",
+    "seaborn<1.0.0,>=0.11.1",
+    "sentry-sdk>=1.29.2",
+    "streamlit>=1.25.0",
+    "python-dotenv>=1.0.0",
+]
+requires-python = ">=3.11,<3.14"
+dynamic = ["classifiers", "classifiers"]
+license = { text = "MIT" }
+
+[tool.ruff]
+line-length = 100
+lint = { extend-select = ["I"] }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.12",
+]
