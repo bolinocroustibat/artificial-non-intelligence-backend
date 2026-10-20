@@ -26,15 +26,9 @@ These dependencies are automatically handled by Docker:
 
 ## Running with Docker (recommended)
 
-1. Create a `.env` file in the root directory with the following variables:
+1. Copy `.env.example` to `.env` and adjust values if needed:
 ```bash
-ENVIRONMENT=local
-APP_PORT=8000
-DATA_PORT=8501
-POSTGRES_PORT=5432
-POSTGRES_DB=artificial-non-intelligence
-SENTRY_DSN=https://abc123@abc123.ingest.sentry.io/abc123
-ORIGINS=http://localhost:8888,https://artificial-non-intelligence.netlify.app
+cp .env.example .env
 ```
 
 `POSTGRES_PORT` is the port published on your machine. Inside Compose, both apps talk to Postgres on port 5432.
@@ -71,7 +65,7 @@ Available tags:
 
 ### Run locally (without Docker)
 
-1. Create a `.env` file as described above
+1. Copy `.env.example` to `.env` as described above
 
 2. Create a virtual environment and install dependencies:
 ```bash
