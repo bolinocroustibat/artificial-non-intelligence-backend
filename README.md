@@ -1,4 +1,4 @@
-# Artificial Non Intelligence
+# Artificial Non Intelligence - Backend
 
 <img src=/images/Cover_photo_Artifical_NonIntelligence.png>
 
