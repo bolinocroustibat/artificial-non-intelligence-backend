@@ -86,15 +86,15 @@ jobs:
             set -e  # Exit on any error
 
             # Ensure directory exists
-            mkdir -p /home/www/artificial-non-intelligence-api
-            cd /home/www/artificial-non-intelligence-api
+            mkdir -p "${{ secrets.SERVER_PATH }}"
+            cd "${{ secrets.SERVER_PATH }}"
 
             # Clone or update the repository for configuration files
             if [ -d .git ]; then
               git fetch
               git reset --hard origin/main
             else
-              git clone https://github.com/bolinocroustibat/artificial-non-intelligence-api.git .
+              git clone https://github.com/bolinocroustibat/artificial-non-intelligence-backend.git .
             fi
 
             # Login to GitHub Container Registry
