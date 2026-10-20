@@ -62,12 +62,12 @@ with connection:
     cursor.execute(query)
     comments_count = cursor.fetchall()
 
-    # Get the general answers trend
-    query: str = "SELECT answer, count(*) AS a FROM answers GROUP by answer;"
+    # Total answers in the table (may include orphaned rows if questions were removed)
+    query: str = "SELECT count(*) FROM answers;"
     cursor.execute(query)
-    answers_count = cursor.fetchall()
+    total_answers_count: int = cursor.fetchone()[0]
 
-    # Count number of different answers for each question
+    # Answers joined with questions — used for accuracy (excludes orphans)
     query: str = """
     SELECT
         questions.id,
@@ -92,30 +92,29 @@ st.markdown("<h2>Number of games played (sessions)</h2>", unsafe_allow_html=True
 st.write(sessions_count[1])
 
 st.markdown("<h2>Number of answers</h2>", unsafe_allow_html=True)
-total_answers_count: int = sum(row[1] for row in answers_count)
 st.write(total_answers_count)
 
 df = pd.DataFrame(answers, columns=["id", "content", "real", "answer", "count"])
+analyzed_answers_count: int = int(df["count"].sum()) if not df.empty else 0
 
-# Verify consistency of total number of answers
-# st.write("Sanity check:")
-# st.write("Sum of df['count']: ", df['count'].sum())
-# st.write("total_answers_count: ", total_answers_count)
-# st.write("answers_count: ", answers_count)
-assert df["count"].sum(axis=0, skipna=True) == total_answers_count
+if analyzed_answers_count != total_answers_count:
+    st.warning(
+        f"{total_answers_count - analyzed_answers_count} answer(s) could not be "
+        "matched to an existing question and were excluded from accuracy."
+    )
 
 # Count total number of human right guesses
 right_guesses: int = 0
 wrong_guesses: int = 0
-biggest_good_guesses: int = 0
-biggest_wrong_guesses: int = 0
 for i in df.index:
     if df["real"][i] == df["answer"][i]:
         right_guesses += df["count"][i]
     else:
         wrong_guesses += df["count"][i]
 
-accuracy: float = round(right_guesses / total_answers_count, 4)
+accuracy: float = (
+    round(right_guesses / analyzed_answers_count, 4) if analyzed_answers_count else 0.0
+)
 
 st.markdown("<h2>Current players accuracy</h2>", unsafe_allow_html=True)
 st.write(accuracy)
