@@ -1,6 +1,6 @@
 [project]
 name = "artificial-non-intelligence-api"
-version = "0.4.0"
+version = "0.4.1"
 description = "A deep learning generated web game to raise awareness about AI and trolls, and to have fun. API part. Made by @bolinocroustibat, @Noza8828 and @phlln."
 authors = [
     { name = "Adrien Carpentier", email = "me@adriencarpentier.com" },
