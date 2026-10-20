@@ -13,7 +13,7 @@ load_dotenv()
 
 # Get environment variables
 ENVIRONMENT = os.getenv("ENVIRONMENT", "unknown")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "127.0.0.1")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "db")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
 POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", "5432"))
@@ -30,7 +30,6 @@ if ENVIRONMENT != "local":
         _experiments={
             "profiles_sample_rate": 1.0,
         },
-        
     )
 
 st.set_page_config(
@@ -103,7 +102,7 @@ df = pd.DataFrame(answers, columns=["id", "content", "real", "answer", "count"])
 # st.write("Sum of df['count']: ", df['count'].sum())
 # st.write("total_answers_count: ", total_answers_count)
 # st.write("answers_count: ", answers_count)
-assert df['count'].sum(axis = 0, skipna = True) == total_answers_count
+assert df["count"].sum(axis=0, skipna=True) == total_answers_count
 
 # Count total number of human right guesses
 right_guesses: int = 0

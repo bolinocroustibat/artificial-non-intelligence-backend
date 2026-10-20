@@ -19,8 +19,10 @@ services:
       start_period: 10s
   api:
     container_name: ani-api
-    image: ghcr.io/bolinocroustibat/artificial-non-intelligence-api:${TAG:-latest}
-    build: .
+    image: ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/api:${TAG:-latest}
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
@@ -38,6 +40,22 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+  data-analysis:
+    container_name: ani-data
+    image: ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/data-analysis:${TAG:-latest}
+    build:
+      context: ./data-analysis
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${DATA_PORT:-8501}:8501"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SENTRY_DSN=${SENTRY_DSN}
+    restart: unless-stopped
 
 volumes:
   postgres_data:

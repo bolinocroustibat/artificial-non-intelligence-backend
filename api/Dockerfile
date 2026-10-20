@@ -21,4 +21,4 @@ RUN uv sync --locked
 EXPOSE 8000
 
 # Start the application using gunicorn
-CMD uv run gunicorn --bind 0.0.0.0:8000 --workers 1 --worker-class uvicorn.workers.UvicornWorker api.main:app
+CMD uv run gunicorn --bind 0.0.0.0:8000 --workers 1 --worker-class uvicorn.workers.UvicornWorker main:app

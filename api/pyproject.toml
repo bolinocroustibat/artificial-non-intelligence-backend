@@ -1,6 +1,6 @@
 [project]
 name = "artificial-non-intelligence-api"
-version = "0.3.14"
+version = "0.4.0"
 description = "A deep learning generated web game to raise awareness about AI and trolls, and to have fun. API part. Made by @bolinocroustibat, @Noza8828 and @phlln."
 authors = [
     { name = "Adrien Carpentier", email = "me@adriencarpentier.com" },
@@ -17,7 +17,7 @@ dependencies = [
     "python-dotenv>=1.1.0",
 ]
 requires-python = ">=3.10,<3.14"
-dynamic = ["classifiers", "classifiers"]
+dynamic = ["classifiers"]
 license = { text = "MIT" }
 
 [project.urls]

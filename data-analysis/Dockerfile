@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 8501
 
 # Run Streamlit
-CMD ["uv", "run", "streamlit", "run", "app.py", "--server.address", "0.0.0.0"]
+CMD ["uv", "run", "streamlit", "run", "app.py", "--server.address", "0.0.0.0", "--server.headless", "true"]

@@ -17,12 +17,13 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache-dependency-glob: "**/uv.lock"
 
       - name: Bump version in pyproject.toml and uv.lock to ${{ github.ref_name }}
         run: |
-          sed -i 's/^ *version.*=.*"\([^"]*\)".*/version = "${{ github.ref_name }}"/' ./pyproject.toml
-          uv lock
+          sed -i 's/^ *version.*=.*"\([^"]*\)".*/version = "${{ github.ref_name }}"/' ./api/pyproject.toml ./data-analysis/pyproject.toml
+          uv lock --directory api
+          uv lock --directory data-analysis
 
       - name: Commit and push updated pyproject.toml
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -53,16 +54,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push API image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./api
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+            ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/api:latest
+            ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/api:${{ github.ref_name }}
+          cache-from: type=registry,ref=ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/api:buildcache
+          cache-to: type=registry,ref=ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/api:buildcache,mode=max
+
+      - name: Build and push data analysis image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./data-analysis
+          push: true
+          tags: |
+            ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/data-analysis:latest
+            ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/data-analysis:${{ github.ref_name }}
+          cache-from: type=registry,ref=ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/data-analysis:buildcache
+          cache-to: type=registry,ref=ghcr.io/bolinocroustibat/artificial-non-intelligence-backend/data-analysis:buildcache,mode=max
 
       - name: Execute server commands for deploy
         uses: appleboy/ssh-action@v1
@@ -106,13 +118,24 @@ jobs:
               exit 1
             fi
 
-      - name: Create Sentry release
+      - name: Create Sentry release for the API
         if: success()  # Only create Sentry release if deployment succeeded
         uses: getsentry/action-release@v3
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: "adrien-carpentier"
           SENTRY_PROJECT: "artificial-non-intelligence-api"
+        with:
+          environment: production
+          release: ${{ github.ref_name }}
+
+      - name: Create Sentry release for data analysis
+        if: success()
+        uses: getsentry/action-release@v3
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: "adrien-carpentier"
+          SENTRY_PROJECT: "artificial-non-intelligence-data"
         with:
           environment: production
           release: ${{ github.ref_name }}
