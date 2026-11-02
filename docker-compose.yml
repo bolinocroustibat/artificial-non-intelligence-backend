@@ -27,7 +27,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "${APP_PORT:-8000}:8000"
+      - "127.0.0.1:${APP_PORT:-8000}:8000"
     environment:
       - ENVIRONMENT=${ENVIRONMENT}
       - POSTGRES_DB=${POSTGRES_DB}
@@ -50,7 +50,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "${DATA_PORT:-8501}:8501"
+      - "127.0.0.1:${DATA_PORT:-8501}:8501"
     environment:
       - ENVIRONMENT=${ENVIRONMENT}
       - POSTGRES_DB=${POSTGRES_DB}
